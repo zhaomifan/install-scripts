@@ -106,6 +106,16 @@ jps | grep -E "NamesrvStartup|BrokerStartup|Controller"
 3887909 BrokerStartup
 ```
 
+
+3.1 主备切换
+切换10931端口对应的broker的角色,初始状态为slave,
+当其他机器宕机时,找到该机器对应的salve所在的机器,运行该脚本,将salve升级为master;
+当该宕机机器恢复时,再次运该脚本,将该broker降级恢复为slave
+```shell
+sh switch_broker_10931.sh
+```
+
+
 4. 同步topic(可选)
 如果出现topic只在某一个节点,可通过该命令同步到其他节点
 ```shell
@@ -126,11 +136,6 @@ sh /ncpsmw/rocketmq_cluster/bin/mqadmin clusterList -n 127.0.0.1:9876
 dos2unix /home/install/rocketmq/install_dashboard_cluster.sh
 chmod +x /home/install/rocketmq/install_dashboard_cluster.sh
 sh /home/install/rocketmq/install_dashboard_cluster.sh
-
-
-dos2unix /home/install/rocketmq/install_dashboard_cluster_v6_newport.sh
-chmod +x /home/install/rocketmq/install_dashboard_cluster_v6_newport.sh
-sh /home/install/rocketmq/install_dashboard_cluster_v6_newport.sh
 ```
 ### 卸载控制台
 dos2unix /home/install/rocketmq/install_dashboard_cluster_remove.sh
@@ -148,61 +153,3 @@ sh /home/install/rocketmq/install_dashboard_cluster_remove.sh
 jps | grep -E "NamesrvStartup|BrokerStartup|Controller"
 
 2. 访问 http://192.168.15.80:8089 查看控制台
-
-
-dos2unix /home/install/rocketmq/verify_rocketmq.sh
-chmod +x /home/install/rocketmq/verify_rocketmq.sh
-sh /home/install/rocketmq/verify_rocketmq.sh
-
-
-
-sh bin/mqadmin updateTopic \
-    -n "192.168.15.99:9876" \
-    -t TestZkf \
-    -c DefaultCluster \
-    -r 8 \
-    -w 8 \
-    --accessKey admin \
-    --secretKey ncps@2026
-
-
-
-
-dos2unix /home/install/rocketmq/install_cluster_V3.sh
-chmod +x /home/install/rocketmq/install_cluster_V3.sh
-sh /home/install/rocketmq/install_cluster_V3.sh
-
-
-
-sh /home/install/rocketmq/clean_cluster_v5_Controller_3m3s_fix2_zhipu.sh
-sh /home/install/rocketmq/install_cluster_v4_DLedgerController.sh
-
-
-
-<!-- sh /home/install/rocketmq/clean_cluster_v5_Controller_3m3s_fix2_zhipu.sh -->
-sh /home/install/rocketmq/clean_cluster_v5_Classic_3m3s_ACL.sh
-sh /home/install/rocketmq/install_cluster_v4_DLedgerController.sh
-
-
-sh /home/install/rocketmq/clean_cluster_v4_DLedgerController.sh
-dos2unix /home/install/rocketmq/install_cluster_v5_Classic_3m3s_ACL.sh
-chmod +x /home/install/rocketmq/install_cluster_v5_Classic_3m3s_ACL.sh
-sh /home/install/rocketmq/install_cluster_v5_Classic_3m3s_ACL.sh
-
-
-# 移除 install_cluster_v5_Controller_3m3s_fix2_zhipu_no_acl 安装 install_cluster_v5_Classic_3m3s_ACL
-sh /home/install/rocketmq/clean_cluster_v5_Controller_3m3s_fix2_zhipu.sh
-dos2unix /home/install/rocketmq/install_cluster_v5_Classic_3m3s_ACL.sh
-chmod +x /home/install/rocketmq/install_cluster_v5_Classic_3m3s_ACL.sh
-sh /home/install/rocketmq/install_cluster_v5_Classic_3m3s_ACL.sh
-
-
-sh /home/install/rocketmq/clean_cluster_v5_Classic_3m3s_ACL.sh --delete-data
-
-
-
-
-sh /home/install/rocketmq/install_v3.sh
-
-
-sh /ncpsmw/rocketmq_cluster/bin/mqadmin clusterList -n "192.168.15.80:19876;192.168.15.84:19876;192.168.15.98:19876"

@@ -5,7 +5,7 @@
 
 # ========== 配置区 ==========
 # 集群 NameServer 地址 (分号分隔)
-NAMESRV_ADDRS="192.168.15.80:9876;192.168.15.84:9876;192.168.15.98:9876"
+NAMESRV_ADDRS="192.168.15.80:9876;192.168.15.84:9876;192.168.15.99:9876"
 
 
 # Dashboard 访问信息
@@ -50,7 +50,6 @@ cat > ${INSTALL_DIR}/application.properties <<EOF
 server.port=${DASH_PORT}
 
 rocketmq.config.namesrvAddr=${NAMESRV_ADDRS}
-rocketmq.namesrv.addr=${NAMESRV_ADDRS}
 rocketmq.config.isVIPChannel=false
 
 rocketmq.config.accessKey=rocketmq
@@ -78,7 +77,7 @@ WorkingDirectory=${INSTALL_DIR}
 set -x
 ExecStart=${JAVA_HOME}/bin/java -Xms256m -Xmx256m \
 -Dserver.port=${DASH_PORT} \
--Dspring.config.location=${INSTALL_DIR}/application.properties \
+-Drocketmq.config.namesrvAddr="${NAMESRV_ADDRS}" \
 -jar ${INSTALL_DIR}/rocketmq-dashboard-2.0.0.jar
 
 Restart=on-failure
@@ -94,7 +93,7 @@ if command -v firewall-cmd &> /dev/null; then
     echo "正在开放集群所需端口..."
     
     # NameServer 端口
-    firewall-cmd --zone=public --add-port=19876/tcp --permanent
+    firewall-cmd --zone=public --add-port=9876/tcp --permanent
     # Dashboard 端口
     firewall-cmd --zone=public --add-port=${DASH_PORT}/tcp --permanent
     
@@ -122,7 +121,7 @@ if systemctl is-active --quiet rocketmq-dashboard; then
     echo "✅ Dashboard 集群版安装成功！"
     echo "🌐 访问地址: http://${DASH_IP}:${DASH_PORT}"
     echo "📊 监控集群: ${NAMESRV_ADDRS}"
-    echo "🔥 已开放端口: 19876, ${DASH_PORT}"
+    echo "🔥 已开放端口: 9876, ${DASH_PORT}"
 else
     echo "❌ 启动失败，请查看日志:"
     echo "tail -100 ${LOG_DIR}/dashboard.log"
